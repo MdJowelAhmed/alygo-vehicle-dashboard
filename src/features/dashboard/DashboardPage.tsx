@@ -1,5 +1,5 @@
 import { Button, Table, Tag } from 'antd'
-import { Download, RefreshCw } from 'lucide-react'
+// import { Download, RefreshCw } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { KpiCard } from '@/components/dashboard/KpiCard'
 import {
@@ -57,28 +57,28 @@ export default function DashboardPage() {
   const topAirports = airportsQuery.data ?? []
   const liveTrips = liveTripsQuery.data?.data ?? []
 
-  const isFetching =
-    summaryQuery.isFetching ||
-    revenueQuery.isFetching ||
-    demandQuery.isFetching ||
-    driverGrowthQuery.isFetching ||
-    passengerGrowthQuery.isFetching ||
-    categoryQuery.isFetching ||
-    citiesQuery.isFetching ||
-    airportsQuery.isFetching ||
-    liveTripsQuery.isFetching
+  // const isFetching =
+  //   summaryQuery.isFetching ||
+  //   revenueQuery.isFetching ||
+  //   demandQuery.isFetching ||
+  //   driverGrowthQuery.isFetching ||
+  //   passengerGrowthQuery.isFetching ||
+  //   categoryQuery.isFetching ||
+  //   citiesQuery.isFetching ||
+  //   airportsQuery.isFetching ||
+  //   liveTripsQuery.isFetching
 
-  const refetchAll = () => {
-    void summaryQuery.refetch()
-    void revenueQuery.refetch()
-    void demandQuery.refetch()
-    void driverGrowthQuery.refetch()
-    void passengerGrowthQuery.refetch()
-    void categoryQuery.refetch()
-    void citiesQuery.refetch()
-    void airportsQuery.refetch()
-    void liveTripsQuery.refetch()
-  }
+  // const refetchAll = () => {
+  //   void summaryQuery.refetch()
+  //   void revenueQuery.refetch()
+  //   void demandQuery.refetch()
+  //   void driverGrowthQuery.refetch()
+  //   void passengerGrowthQuery.refetch()
+  //   void categoryQuery.refetch()
+  //   void citiesQuery.refetch()
+  //   void airportsQuery.refetch()
+  //   void liveTripsQuery.refetch()
+  // }
 
   return (
     <PageShell
