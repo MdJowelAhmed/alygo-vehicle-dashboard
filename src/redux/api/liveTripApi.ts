@@ -78,6 +78,8 @@ export interface LiveTripDetailPerson {
   passengerStatus?: string
   driverStatus?: string
   vehicle?: string | null
+  vehicleName?: string | null
+  vehicleNumber?: string | null
 }
 
 export interface LiveTripLiveTracking {

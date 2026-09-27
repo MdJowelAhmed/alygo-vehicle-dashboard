@@ -165,32 +165,51 @@ export default function TripDetailPage() {
             <Descriptions.Item label="Base Fare">
               {formatCurrency(trip.fareSummary.baseFare)}
             </Descriptions.Item>
-            <Descriptions.Item label="Distance">
+            <Descriptions.Item label="Distance Fare">
               {formatCurrency(trip.fareSummary.distanceFare)}
             </Descriptions.Item>
-            <Descriptions.Item label="Time">
+            <Descriptions.Item label="Duration Fare">
               {formatCurrency(trip.fareSummary.durationFare)}
             </Descriptions.Item>
-            <Descriptions.Item label="Surge">
-              {formatCurrency(trip.fareSummary.surgeFare)}
+            {trip.fareSummary.surgeFare > 0 && (
+              <Descriptions.Item label="Surge Charge">
+                {formatCurrency(trip.fareSummary.surgeFare)}
+              </Descriptions.Item>
+            )}
+            {trip.fareSummary.waitingCharge > 0 && (
+              <Descriptions.Item label="Waiting Charge">
+                {formatCurrency(trip.fareSummary.waitingCharge)}
+              </Descriptions.Item>
+            )}
+            {trip.fareSummary.tollCharge > 0 && (
+              <Descriptions.Item label="Toll Charge">
+                {formatCurrency(trip.fareSummary.tollCharge)}
+              </Descriptions.Item>
+            )}
+            {trip.fareSummary.platformFee > 0 && (
+              <Descriptions.Item label="Platform Fee">
+                {formatCurrency(trip.fareSummary.platformFee)}
+              </Descriptions.Item>
+            )}
+            {trip.fareSummary.discount > 0 && (
+              <Descriptions.Item label="Discount">
+                -{formatCurrency(trip.fareSummary.discount)}
+              </Descriptions.Item>
+            )}
+            <Descriptions.Item label="Total Fare">
+              <span className="text-base font-semibold text-emerald-400">
+                {formatCurrency(trip.fareSummary.totalFare)}
+              </span>
             </Descriptions.Item>
-            <Descriptions.Item label="Waiting">
-              {formatCurrency(trip.fareSummary.waitingCharge)}
+            <Descriptions.Item label="Payment Method">
+              {trip.fareSummary.paymentMethod ? (
+                <span className="capitalize">{trip.fareSummary.paymentMethod}</span>
+              ) : (
+                '—'
+              )}
             </Descriptions.Item>
-            <Descriptions.Item label="Toll">
-              {formatCurrency(trip.fareSummary.tollCharge)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Platform Fee">
-              {formatCurrency(trip.fareSummary.platformFee)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Discount">
-              {formatCurrency(trip.fareSummary.discount)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Total">
-              {formatCurrency(trip.fareSummary.totalFare)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Payment">
-              {trip.fareSummary.paymentMethod || trip.fareSummary.paymentStatus || '—'}
+            <Descriptions.Item label="Payment Status">
+              <StatusBadge status={trip.fareSummary.paymentStatus} />
             </Descriptions.Item>
           </Descriptions>
         </SectionCard>
@@ -202,7 +221,16 @@ export default function TripDetailPage() {
               <Descriptions.Item label="Driver ID">{trip.driver.id}</Descriptions.Item>
               <Descriptions.Item label="Phone">{trip.driver.phone || '—'}</Descriptions.Item>
               <Descriptions.Item label="Email">{trip.driver.email || '—'}</Descriptions.Item>
-              <Descriptions.Item label="Vehicle">{trip.driver.vehicle || '—'}</Descriptions.Item>
+              <Descriptions.Item label="Vehicle Model">
+                {trip.driver.vehicleName || trip.driver.vehicle || '—'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Vehicle Number">
+                {trip.driver.vehicleNumber ? (
+                  <span className="font-mono text-white">{trip.driver.vehicleNumber}</span>
+                ) : (
+                  '—'
+                )}
+              </Descriptions.Item>
               <Descriptions.Item label="Rating">
                 {trip.driver.overallRating != null ? `${trip.driver.overallRating} ★` : '—'}
               </Descriptions.Item>
