@@ -57,58 +57,29 @@ export default function DashboardPage() {
   const topAirports = airportsQuery.data ?? []
   const liveTrips = liveTripsQuery.data?.data ?? []
 
-  // const isFetching =
-  //   summaryQuery.isFetching ||
-  //   revenueQuery.isFetching ||
-  //   demandQuery.isFetching ||
-  //   driverGrowthQuery.isFetching ||
-  //   passengerGrowthQuery.isFetching ||
-  //   categoryQuery.isFetching ||
-  //   citiesQuery.isFetching ||
-  //   airportsQuery.isFetching ||
-  //   liveTripsQuery.isFetching
 
-  // const refetchAll = () => {
-  //   void summaryQuery.refetch()
-  //   void revenueQuery.refetch()
-  //   void demandQuery.refetch()
-  //   void driverGrowthQuery.refetch()
-  //   void passengerGrowthQuery.refetch()
-  //   void categoryQuery.refetch()
-  //   void citiesQuery.refetch()
-  //   void airportsQuery.refetch()
-  //   void liveTripsQuery.refetch()
-  // }
+  const getLiveValue = (key: string) => {
+    if (liveKpis[key] !== undefined) return liveKpis[key]
+    if (key === 'revenueThisMonth') return liveKpis.revenueMonth
+    if (key === 'revenueMonth') return liveKpis.revenueThisMonth
+    if (key === 'driverApprovalQueue') return liveKpis.approvalQueue
+    if (key === 'approvalQueue') return liveKpis.driverApprovalQueue
+    if (key === 'airportQueueCount') return liveKpis.airportQueue
+    if (key === 'airportQueue') return liveKpis.airportQueueCount
+    return undefined
+  }
 
   return (
     <PageShell
       title="Executive Dashboard"
       description="Real-time overview of platform performance, operations, and compliance health."
-      // actions={
-      //   <>
-      //     <Button
-      //       icon={<RefreshCw className="h-4 w-4" />}
-      //       onClick={refetchAll}
-      //       loading={isFetching}
-      //     >
-      //       Refresh
-      //     </Button>
-      //     <Button
-      //       type="primary"
-      //       icon={<Download className="h-4 w-4" />}
-      //       onClick={() => adminActions.notify('Report exported')}
-      //     >
-      //       Export Report
-      //     </Button>
-      //   </>
-      // }
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {kpis.slice(0, 8).map((metric) => (
           <KpiCard
             key={metric.key}
             metric={metric}
-            liveValue={liveKpis[metric.key]}
+            liveValue={getLiveValue(metric.key)}
           />
         ))}
       </div>

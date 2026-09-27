@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { socketService, startDemoSocketSimulation } from '@/services/socket'
+import { socketService } from '@/services/socket'
 import {
   notificationApi,
   type AdminNotificationPayload,
@@ -28,16 +28,10 @@ export function useSocket() {
     socketService.on('dashboard:activity', handleActivity)
     socketService.on('send-notification::admin', handleAdminNotification)
 
-    const stopDemo = startDemoSocketSimulation(
-      (kpis) => dispatch(updateLiveKpis(kpis)),
-      (activity) => dispatch(addLiveActivity(activity)),
-    )
-
     return () => {
       socketService.off('dashboard:kpi-update', handleKpi)
       socketService.off('dashboard:activity', handleActivity)
       socketService.off('send-notification::admin', handleAdminNotification)
-      stopDemo()
       socketService.disconnect()
     }
   }, [dispatch, token])

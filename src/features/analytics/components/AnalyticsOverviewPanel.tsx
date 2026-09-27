@@ -64,7 +64,7 @@ export function AnalyticsOverviewPanel() {
       icon: 'car',
     },
     {
-      key: 'revenueMonth',
+      key: 'revenueThisMonth',
       label: 'Revenue This Month',
       value: data.revenueThisMonth,
       change: 0,
@@ -80,6 +80,13 @@ export function AnalyticsOverviewPanel() {
       icon: 'calendar',
     },
   ]
+
+  const getLiveValue = (key: string) => {
+    if (liveKpis[key] !== undefined) return liveKpis[key]
+    if (key === 'revenueThisMonth') return liveKpis.revenueMonth
+    if (key === 'revenueMonth') return liveKpis.revenueThisMonth
+    return undefined
+  }
 
   const operationalMetrics = [
     { label: 'Completed Trips (Today)', value: formatNumber(data.completedTripsToday), change: '+0.0%' },
@@ -104,7 +111,7 @@ export function AnalyticsOverviewPanel() {
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {primaryKpis.map((metric) => (
-          <KpiCard key={metric.key} metric={metric} liveValue={liveKpis[metric.key]} />
+          <KpiCard key={metric.key} metric={metric} liveValue={getLiveValue(metric.key)} />
         ))}
       </div>
 
