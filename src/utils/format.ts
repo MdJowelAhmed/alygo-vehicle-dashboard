@@ -1,10 +1,12 @@
 import dayjs from 'dayjs'
 
-export function formatCurrency(value: number, currency = 'USD') {
+export function formatCurrency(value: number, currency = 'USD', decimals = 2) {
+  if (value === undefined || value === null || isNaN(value)) return '$0.00'
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: Number.isInteger(value) ? 0 : decimals,
+    maximumFractionDigits: decimals,
   }).format(value)
 }
 

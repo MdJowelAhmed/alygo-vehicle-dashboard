@@ -29,7 +29,7 @@ import {
 } from '@/redux/api/dashboardOverviewApi'
 import { useGetLiveTripsQuery, type LiveTrip } from '@/redux/api/liveTripApi'
 import { useAppSelector } from '@/store/hooks'
-import { formatCurrency } from '@/utils/format'
+import { formatCurrency, formatDateTime } from '@/utils/format'
 
 export default function DashboardPage() {
   useDocumentTitle('Executive Dashboard')
@@ -160,6 +160,11 @@ export default function DashboardPage() {
               title: 'Fare',
               dataIndex: 'fare',
               render: (f: number) => formatCurrency(f),
+            },
+            {
+              title: 'Created',
+              dataIndex: 'createdAt',
+              render: (createdAt: string) => formatDateTime(createdAt),
             },
             {
               title: 'Action',
