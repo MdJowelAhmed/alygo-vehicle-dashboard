@@ -43,8 +43,10 @@ const tooltipStyle = {
     background: '#161922',
     border: '1px solid rgba(255,255,255,0.08)',
     borderRadius: 12,
+    color: '#ffffff',
   },
-  labelStyle: { color: '#f8fafc' },
+  labelStyle: { color: '#f8fafc', fontWeight: 600 },
+  itemStyle: { color: '#e2e8f0' },
 }
 
 export function RevenueTrendChart({ data }: { data: ChartPoint[] }) {
