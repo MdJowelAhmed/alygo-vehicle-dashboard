@@ -11,6 +11,7 @@ import {
   TimePicker,
 } from 'antd'
 import dayjs from 'dayjs'
+import { ExternalLink } from 'lucide-react'
 import { AdminActionHost } from '@/components/admin'
 import { PageShell } from '@/components/common/PageShell'
 import { TimezoneSelect } from '@/components/shared/TimezoneSelect'
@@ -78,9 +79,21 @@ export default function SystemConfigurationPage() {
       title="System Configuration"
       description="Manage driver matching, tracking, reservations, lost & found, referrals, and rewards defaults."
       actions={
-        <Button type="primary" onClick={handleSave} loading={saving} disabled={isLoading || isFetching}>
-          Save Changes
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            type="primary"
+            href="http://10.10.7.10:5005/api/v1/system-configurations/docs"
+            target="_blank"
+            rel="noopener noreferrer"
+            icon={<ExternalLink className="h-4 w-4" />}
+            className="!bg-amber-500 hover:!bg-amber-400 !text-white/85 !font-semibold !border-none shadow-md shadow-amber-500/20"
+          >
+            Go to System Configuration Documentation
+          </Button>
+          <Button type="primary" onClick={handleSave} loading={saving} disabled={isLoading || isFetching}>
+            Save Changes
+          </Button>
+        </div>
       }
     >
       <div className="glass-card p-4 md:p-6">
