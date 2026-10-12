@@ -20,7 +20,6 @@ import {
   buildRestrictionDetailFields,
   getBackgroundCheckActionItems,
   getComplianceFeeActionItems,
-  getDocumentMonitorActionItems,
   getDriverRestrictionActionItems,
 } from '@/features/compliance/complianceHelpers'
 import { useAdminActions } from '@/hooks/useAdminActions'
@@ -265,15 +264,8 @@ export function DocumentMonitoringTab() {
 
   const { data, isLoading } = useGetDocumentMonitoringQuery({ page, pageSize: PAGE_SIZE, search })
 
-  const handleAction = (key: string, record: DocumentMonitorRecord) => {
-    switch (key) {
-      case 'view':
-        adminActions.openDrawer(record.documentType, buildDocumentDetailFields(record))
-        break
-      case 'notify':
-        adminActions.notify('Driver notified', record.driverName)
-        break
-    }
+  const openDocument = (record: DocumentMonitorRecord) => {
+    adminActions.openDrawer(record.documentType, buildDocumentDetailFields(record))
   }
 
   return (
@@ -300,9 +292,7 @@ export function DocumentMonitoringTab() {
           onChange: setPage,
           showSizeChanger: false,
         }}
-        {...createTableRowProps<DocumentMonitorRecord>((record) =>
-          adminActions.openDrawer(record.documentType, buildDocumentDetailFields(record)),
-        )}
+        {...createTableRowProps<DocumentMonitorRecord>(openDocument)}
         columns={[
           { title: 'Driver', dataIndex: 'driverName' },
           { title: 'Document Type', dataIndex: 'documentType' },
@@ -317,10 +307,25 @@ export function DocumentMonitoringTab() {
             render: (d: number | null) => (d != null ? d : '—'),
           },
           { title: 'Status', dataIndex: 'status', render: (s: string) => <StatusBadge status={s} /> },
-          createActionsColumn<DocumentMonitorRecord>(
-            () => getDocumentMonitorActionItems(),
-            (key, record) => handleAction(key, record),
-          ),
+          {
+            title: 'Actions',
+            key: 'actions',
+            fixed: 'right',
+            width: 90,
+            align: 'center',
+            render: (_: unknown, record: DocumentMonitorRecord) => (
+              <Button
+                type="link"
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  openDocument(record)
+                }}
+              >
+                View
+              </Button>
+            ),
+          },
         ]}
       />
       <AdminActionHost actions={adminActions} />

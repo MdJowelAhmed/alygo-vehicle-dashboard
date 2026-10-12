@@ -1,7 +1,5 @@
 import {
   CheckCircle,
-  Bell,
-  Eye,
   FileText,
   Pencil,
   Power,
@@ -43,13 +41,6 @@ export function buildBackgroundCheckDetailFields(record: BackgroundCheckRecord):
       value:
         'No adverse findings on motor vehicle record. Criminal history clear. Employment verification pending.',
     },
-  ]
-}
-
-export function getDocumentMonitorActionItems(): ActionMenuItem[] {
-  return [
-    { key: 'view', label: 'View', icon: Eye, group: 1 },
-    { key: 'notify', label: 'Notify Driver', icon: Bell, group: 2 },
   ]
 }
 
