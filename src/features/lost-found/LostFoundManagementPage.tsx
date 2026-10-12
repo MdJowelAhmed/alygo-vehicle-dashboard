@@ -5,7 +5,6 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { CategoryManagementTable } from '@/features/lost-found/components/CategoryManagementTable'
 import { CompensationSettings } from '@/features/lost-found/components/CompensationSettings'
 import { DeliveryFeeSettingsTable } from '@/features/lost-found/components/DeliveryFeeSettingsTable'
-import { DisputeManagementTable } from '@/features/lost-found/components/DisputeManagementTable'
 import { LostFoundAnalytics } from '@/features/lost-found/components/LostFoundAnalytics'
 import { LostFoundOverviewCards } from '@/features/lost-found/components/LostFoundOverviewCards'
 import { LostItemTable } from '@/features/lost-found/components/LostItemTable'
@@ -18,13 +17,15 @@ const LOST_FOUND_TABS = [
   'delivery-fees',
   'categories',
   'compensation',
-  'disputes',
   'analytics',
 ] as const
 
 type LostFoundTabKey = (typeof LOST_FOUND_TABS)[number]
 
 function resolveLostFoundTab(tab: string | null): LostFoundTabKey {
+  if (tab === 'disputes') {
+    return 'reports'
+  }
   if (tab && (LOST_FOUND_TABS as readonly string[]).includes(tab)) {
     return tab as LostFoundTabKey
   }
@@ -40,7 +41,7 @@ export default function LostFoundManagementPage() {
   return (
     <PageShell
       title="Lost & Found"
-      description="Monitor lost item reports, manage returns, configure fees and compensation, resolve disputes, and track recovery analytics."
+      description="Monitor lost item reports, manage returns, configure fees and compensation, and track recovery analytics."
     >
       <LostFoundOverviewCards />
 
@@ -73,11 +74,6 @@ export default function LostFoundManagementPage() {
               key: 'compensation',
               label: 'Driver Compensation',
               children: <CompensationSettings />,
-            },
-            {
-              key: 'disputes',
-              label: 'Dispute Management',
-              children: <DisputeManagementTable />,
             },
             {
               key: 'analytics',
