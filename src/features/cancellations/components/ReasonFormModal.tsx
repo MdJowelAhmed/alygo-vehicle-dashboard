@@ -18,7 +18,7 @@ interface ReasonFormModalProps {
 }
 
 const USER_TYPE_OPTIONS = [
-  { value: 'passenger', label: 'Passenger' },
+  { value: 'passenger', label: 'User' },
   { value: 'driver', label: 'Driver' },
 ]
 

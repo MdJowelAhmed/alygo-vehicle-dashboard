@@ -47,6 +47,20 @@ export interface UpdateCancellationPolicyBody {
   }
 }
 
+type CancellationPolicyApiPayload = CancellationPolicy & {
+  user?: PassengerCancellationPolicy
+}
+
+function normalizeCancellationPolicy(
+  raw: CancellationPolicyApiPayload,
+): CancellationPolicy {
+  const passenger = raw.passenger ?? raw.user
+  return {
+    ...raw,
+    passenger: passenger ?? raw.passenger,
+  }
+}
+
 export const cancellationPolicyApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getActiveCancellationPolicy: builder.query<CancellationPolicy, void>({
@@ -54,7 +68,8 @@ export const cancellationPolicyApi = baseApi.injectEndpoints({
         url: '/cancellation-policies/active',
         method: 'GET',
       }),
-      transformResponse: (response: ApiResponse<CancellationPolicy>) => response.data,
+      transformResponse: (response: ApiResponse<CancellationPolicyApiPayload>) =>
+        normalizeCancellationPolicy(response.data),
       providesTags: ['CancellationPolicy'],
     }),
 
@@ -67,7 +82,8 @@ export const cancellationPolicyApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      transformResponse: (response: ApiResponse<CancellationPolicy>) => response.data,
+      transformResponse: (response: ApiResponse<CancellationPolicyApiPayload>) =>
+        normalizeCancellationPolicy(response.data),
       invalidatesTags: ['CancellationPolicy'],
     }),
   }),

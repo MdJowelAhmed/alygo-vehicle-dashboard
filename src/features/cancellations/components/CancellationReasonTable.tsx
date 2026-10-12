@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Button, Table, Tag } from 'antd'
+import { Button, Select, Table, Tag } from 'antd'
 import { Plus } from 'lucide-react'
 import {
   AdminActionHost,
@@ -24,7 +24,9 @@ import {
   getReasonActionItems,
   getReasonUserTypeLabel,
   openPolicyDrawer,
+  REASON_USER_TYPE_FILTER_OPTIONS,
 } from '@/features/cancellations/cancellationHelpers'
+import type { CancellationReasonType } from '@/types/cancellation'
 import {
   CreateReasonModal,
   EditReasonModal,
@@ -36,6 +38,7 @@ export function CancellationReasonTable() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState('')
+  const [userTypeFilter, setUserTypeFilter] = useState<CancellationReasonType | undefined>()
 
   const [createOpen, setCreateOpen] = useState(false)
   const [editRecord, setEditRecord] = useState<CancellationReasonRow | null>(null)
@@ -45,6 +48,7 @@ export function CancellationReasonTable() {
     page,
     limit,
     searchTerm,
+    userType: userTypeFilter,
   })
 
   const [createReason, { isLoading: creating }] = useCreateCancellationReasonMutation()
@@ -96,11 +100,24 @@ export function CancellationReasonTable() {
   return (
     <>
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <SearchingInput
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Search cancellation reasons..."
-        />
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <SearchingInput
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Search cancellation reasons..."
+          />
+          <Select
+            value={userTypeFilter}
+            placeholder="User type: All"
+            allowClear
+            className="min-w-40!"
+            options={[...REASON_USER_TYPE_FILTER_OPTIONS]}
+            onChange={(value) => {
+              setUserTypeFilter(value)
+              setPage(1)
+            }}
+          />
+        </div>
         <Button type="primary" icon={<Plus className="h-4 w-4" />} onClick={() => setCreateOpen(true)}>
           Add New Reason
         </Button>

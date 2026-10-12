@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Button, Spin } from 'antd'
-import { Car, Pencil, User } from 'lucide-react'
+import { Pencil, User } from 'lucide-react'
 import { useAdminActions } from '@/hooks/useAdminActions'
 import {
   useGetActiveCancellationPolicyQuery,
@@ -73,14 +73,14 @@ function toFormValues(policy: CancellationPolicy): UpdateCancellationPolicyBody 
     },
     driver: {
       afterAccept: {
-        cancellationFee: policy.driver.afterAccept.cancellationFee,
-        platformShare: policy.driver.afterAccept.platformShare,
+        cancellationFee: policy.driver?.afterAccept?.cancellationFee ?? 0,
+        platformShare: policy.driver?.afterAccept?.platformShare ?? 0,
       },
       excessiveCancellation: {
-        cancellationFee: policy.driver.excessiveCancellation.cancellationFee,
-        platformShare: policy.driver.excessiveCancellation.platformShare,
+        cancellationFee: policy.driver?.excessiveCancellation?.cancellationFee ?? 0,
+        platformShare: policy.driver?.excessiveCancellation?.platformShare ?? 0,
       },
-      excessiveCancellationThreshold: policy.driver.excessiveCancellationThreshold,
+      excessiveCancellationThreshold: policy.driver?.excessiveCancellationThreshold ?? 0,
     },
   }
 }
@@ -104,7 +104,7 @@ export function CancellationPolicyPanel() {
     )
   }
 
-  if (!policy || !formValues) {
+  if (!policy?.passenger || !formValues) {
     return (
       <div className="glass-card p-8 text-center text-alygo-text-muted">
         No active cancellation policy found.
@@ -120,7 +120,7 @@ export function CancellationPolicyPanel() {
           <p className="mt-1 text-sm text-alygo-text-muted">
             {policy.updatedAt
               ? `Last updated ${formatDateTime(policy.updatedAt)}`
-              : 'Platform-wide fee rules for passenger and driver cancellations'}
+              : 'Platform-wide fee rules for user cancellations'}
           </p>
         </div>
         <Button
@@ -139,7 +139,7 @@ export function CancellationPolicyPanel() {
             <User className="h-4 w-4 text-indigo-400" />
           </div>
           <h3 className="text-sm font-semibold uppercase tracking-wide text-alygo-text-muted">
-            Passenger Cancellation
+            User Cancellation
           </h3>
         </div>
         <div className="grid gap-3 lg:grid-cols-3">
@@ -158,40 +158,6 @@ export function CancellationPolicyPanel() {
             description="Passenger cancels after the driver has arrived"
             rule={policy.passenger.afterDriverArrived}
           />
-        </div>
-      </section>
-
-      <section className="space-y-3">
-        <div className="flex items-center gap-2">
-          <div className="rounded-lg bg-cyan-500/10 p-2">
-            <Car className="h-4 w-4 text-cyan-400" />
-          </div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-alygo-text-muted">
-            Driver Cancellation
-          </h3>
-        </div>
-        <div className="grid gap-3 lg:grid-cols-3">
-          <RuleCard
-            title="After Accept"
-            description="Driver cancels after accepting a trip"
-            rule={policy.driver.afterAccept}
-            showDriverCompensation={false}
-          />
-          <RuleCard
-            title="Excessive Cancellation"
-            description="Penalty when driver exceeds the cancellation threshold"
-            rule={policy.driver.excessiveCancellation}
-            showDriverCompensation={false}
-          />
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            <h4 className="text-sm font-semibold text-white">Excessive Threshold</h4>
-            <p className="mt-0.5 text-xs text-alygo-text-muted">
-              Number of cancellations before excessive penalty applies
-            </p>
-            <p className="mt-4 text-3xl font-semibold text-white">
-              {policy.driver.excessiveCancellationThreshold}
-            </p>
-          </div>
         </div>
       </section>
 

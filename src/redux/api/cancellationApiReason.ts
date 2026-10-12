@@ -27,7 +27,7 @@ export interface CancellationReasonApiItem {
   _id: string
   reasonName: string
   description: string
-  userType: CancellationReasonType
+  userType: CancellationReasonType | 'user' | string
   sortOrder?: number
   status: CancellationEntityStatus
   isDeleted?: boolean
@@ -79,12 +79,25 @@ export interface UpdateCancellationReasonStatusBody {
   status: CancellationEntityStatus
 }
 
+/** API uses `user`; dashboard UI uses `passenger` for the same role. */
+export function fromApiReasonUserType(
+  userType: string | undefined,
+): CancellationReasonType {
+  const normalized = userType?.toLowerCase()
+  if (normalized === 'driver') return 'driver'
+  return 'passenger'
+}
+
+export function toApiReasonUserType(userType: CancellationReasonType): 'user' | 'driver' {
+  return userType === 'driver' ? 'driver' : 'user'
+}
+
 function mapReason(item: CancellationReasonApiItem): CancellationReasonRow {
   return {
     id: item._id,
     name: item.reasonName,
     description: item.description ?? '',
-    userType: item.userType,
+    userType: fromApiReasonUserType(item.userType),
     status: item.status,
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
@@ -104,7 +117,7 @@ export const cancellationApiReason = baseApi.injectEndpoints({
           page,
           limit,
           searchTerm: searchTerm?.trim(),
-          userType,
+          userType: userType ? toApiReasonUserType(userType) : undefined,
           status,
         }),
       }),
@@ -133,7 +146,10 @@ export const cancellationApiReason = baseApi.injectEndpoints({
       query: (body) => ({
         url: '/cancellation-reasons',
         method: 'POST',
-        body,
+        body: {
+          ...body,
+          userType: toApiReasonUserType(body.userType),
+        },
       }),
       transformResponse: (response: ApiResponse<CancellationReasonApiItem>) =>
         mapReason(response.data),
@@ -147,7 +163,10 @@ export const cancellationApiReason = baseApi.injectEndpoints({
       query: ({ id, ...body }) => ({
         url: `/cancellation-reasons/${id}`,
         method: 'PATCH',
-        body,
+        body: {
+          ...body,
+          userType: toApiReasonUserType(body.userType),
+        },
       }),
       transformResponse: (response: ApiResponse<CancellationReasonApiItem>) =>
         mapReason(response.data),

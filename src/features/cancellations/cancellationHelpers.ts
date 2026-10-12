@@ -68,8 +68,14 @@ function statusLabel(status: string) {
   return status === 'active' ? 'Active' : 'Inactive'
 }
 
-export function getReasonUserTypeLabel(userType: 'passenger' | 'driver') {
-  return userType === 'passenger' ? 'Passenger' : 'Driver'
+export const REASON_USER_TYPE_FILTER_OPTIONS = [
+  { value: 'passenger', label: 'User' },
+  { value: 'driver', label: 'Driver' },
+] as const
+
+export function getReasonUserTypeLabel(userType: 'passenger' | 'driver' | undefined) {
+  if (userType === 'driver') return 'Driver'
+  return 'User'
 }
 
 export function buildReasonDetailFields(record: CancellationReasonRow): DetailField[] {
