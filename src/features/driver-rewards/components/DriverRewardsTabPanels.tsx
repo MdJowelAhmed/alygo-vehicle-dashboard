@@ -16,7 +16,6 @@ import {
   defaultPointRuleFormValues,
   formatPointRulePoints,
   mapPointRuleItem,
-  POINT_RULE_EVENT_TYPE_LABELS,
   POINT_RULE_EVENT_TYPE_OPTIONS,
   pointRuleToFormValues,
   type PointRuleFormValues,
@@ -187,15 +186,9 @@ function PointRulesTabPanel({
         rowKey="id"
         dataSource={rows}
         pagination={false}
-        scroll={{ x: 900 }}
+        scroll={{ x: 760 }}
         columns={[
           { title: 'Rule Name', dataIndex: 'name' },
-          {
-            title: 'Event Type',
-            dataIndex: 'eventType',
-            render: (eventType: PointRuleRow['eventType']) =>
-              POINT_RULE_EVENT_TYPE_LABELS[eventType] ?? eventType,
-          },
           {
             title: pointsLabel,
             dataIndex: 'points',
