@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Button, Form, Input, InputNumber, Select } from 'antd'
 import { AdminActionHost } from '@/components/admin'
-import { SearchingInput } from '@/components/shared/SearchingInput'
 import { useAdminActions } from '@/hooks/useAdminActions'
 import { useGetDriverManagementListQuery } from '@/redux/api/driverManagementApi'
 import type { DriverOverviewItem } from '@/redux/api/driverManagementApi'
@@ -40,14 +39,12 @@ interface OverrideTierFormValues {
 
 export function AdminOverrideTab() {
   const adminActions = useAdminActions()
-  const [driverSearch, setDriverSearch] = useState('')
   const [pointsForm] = Form.useForm<OverridePointsFormValues>()
   const [tierForm] = Form.useForm<OverrideTierFormValues>()
 
   const { data: driversData, isFetching: driversLoading } = useGetDriverManagementListQuery({
     page: 1,
     limit: 50,
-    searchTerm: driverSearch || undefined,
   })
 
   const { data: tiersData, isLoading: tiersLoading } = useGetTiersListQuery({
@@ -119,12 +116,7 @@ export function AdminOverrideTab() {
         <p className="text-sm text-alygo-text-muted">
           Manually override a driver&apos;s reward points or assigned tier.
         </p>
-        <SearchingInput
-          value={driverSearch}
-          onChange={setDriverSearch}
-          placeholder="Search drivers for override..."
-          className="w-full max-w-sm"
-        />
+     
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
