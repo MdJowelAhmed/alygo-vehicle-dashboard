@@ -13,7 +13,7 @@ const overviewConfig: {
   { key: 'totalComplaints', label: 'Total Complaints', icon: AlertTriangle },
   { key: 'pendingReview', label: 'Pending Review', icon: Clock },
   { key: 'underInvestigation', label: 'Under Investigation', icon: Search },
-  { key: 'approvedRefunds', label: 'Approved Refunds', icon: CheckCircle },
+  // { key: 'approvedRefunds', label: 'Approved Refunds', icon: CheckCircle },
   { key: 'rejected', label: 'Rejected', icon: XCircle },
 ]
 
@@ -22,7 +22,7 @@ export function TripCompletionOverviewCards() {
 
   if (isLoading || !data) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="glass-card h-28 animate-pulse p-5" />
         ))}
@@ -31,7 +31,7 @@ export function TripCompletionOverviewCards() {
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {overviewConfig.map(({ key, label, icon: Icon }) => (
         <div key={key} className="glass-card p-5">
           <div className="rounded-xl bg-indigo-500/10 p-2.5 w-fit">
