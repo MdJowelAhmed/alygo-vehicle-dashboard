@@ -61,7 +61,6 @@ export const baseApi = createApi({
     'PeakHours',
     'HelpAndSupports',
     'Broadcasts',
-    'AiSupport',
     'Notifications',
     'Communication',
     'Settings',
