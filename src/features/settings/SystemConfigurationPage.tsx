@@ -77,7 +77,7 @@ export default function SystemConfigurationPage() {
   return (
     <PageShell
       title="System Configuration"
-      description="Manage driver matching, tracking, reservations, lost & found, referrals, and rewards defaults."
+      description="Manage driver matching, tracking, reservations, lost & found, referrals, rewards, AI support, and verification defaults."
       actions={
         <div className="flex flex-wrap items-center gap-3">
           <Button
@@ -144,6 +144,20 @@ export default function SystemConfigurationPage() {
                       <Form.Item
                         name={['driverMatching', 'rideRequestLifetimeSeconds']}
                         label="Ride Request Lifetime (sec)"
+                        rules={[{ required: true }]}
+                      >
+                        <InputNumber min={0} className="!w-full" />
+                      </Form.Item>
+                      <Form.Item
+                        name={['driverMatching', 'reservationDriverVisibilityDurationSeconds']}
+                        label="Reservation Driver Visibility Duration (sec)"
+                        rules={[{ required: true }]}
+                      >
+                        <InputNumber min={0} className="!w-full" />
+                      </Form.Item>
+                      <Form.Item
+                        name={['driverMatching', 'reservationRideRequestLifetimeSeconds']}
+                        label="Reservation Ride Request Lifetime (sec)"
                         rules={[{ required: true }]}
                       >
                         <InputNumber min={0} className="!w-full" />
@@ -574,6 +588,176 @@ export default function SystemConfigurationPage() {
                         }
                       >
                         <TimePicker format="HH:mm" className="!w-full" minuteStep={5} />
+                      </Form.Item>
+                    </SectionCard>
+                  ),
+                },
+                {
+                  key: 'aiSupport',
+                  label: 'AI Support',
+                  children: (
+                    <div className="space-y-4">
+                      <SectionCard
+                        title="AI Support"
+                        description="Provider, model, and answer behavior for the driver AI assistant."
+                      >
+                        <Form.Item
+                          name={['aiSupport', 'enabled']}
+                          label="Enabled"
+                          valuePropName="checked"
+                        >
+                          <Switch />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'provider']}
+                          label="Provider"
+                          rules={[{ required: true }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'model']}
+                          label="Model"
+                          rules={[{ required: true }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'defaultLanguage']}
+                          label="Default Language"
+                          rules={[{ required: true }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'temperature']}
+                          label="Temperature"
+                          rules={[{ required: true }]}
+                        >
+                          <InputNumber min={0} max={2} step={0.1} className="!w-full" />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'maxTokens']}
+                          label="Max Tokens"
+                          rules={[{ required: true }]}
+                        >
+                          <InputNumber min={1} className="!w-full" />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'historyLength']}
+                          label="History Length"
+                          rules={[{ required: true }]}
+                        >
+                          <InputNumber min={0} className="!w-full" />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'minimumConfidence']}
+                          label="Minimum Confidence"
+                          rules={[{ required: true }]}
+                        >
+                          <InputNumber min={0} max={1} step={0.05} className="!w-full" />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'enableConversationMemory']}
+                          label="Conversation Memory"
+                          valuePropName="checked"
+                        >
+                          <Switch />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'allowFallbackAnswer']}
+                          label="Allow Fallback Answer"
+                          valuePropName="checked"
+                        >
+                          <Switch />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'enabledModules']}
+                          label="Enabled Modules"
+                          className="md:col-span-2"
+                        >
+                          <Select mode="tags" tokenSeparators={[',']} className="!w-full" />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'suggestedQuestions']}
+                          label="Suggested Questions"
+                          className="md:col-span-2"
+                        >
+                          <Select mode="tags" tokenSeparators={[',']} className="!w-full" />
+                        </Form.Item>
+                      </SectionCard>
+
+                      <SectionCard title="Rate Limits">
+                        <Form.Item
+                          name={['aiSupport', 'rateLimit', 'maxQuestionsPerMinute']}
+                          label="Max Questions Per Minute"
+                          rules={[{ required: true }]}
+                        >
+                          <InputNumber min={0} className="!w-full" />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'rateLimit', 'maxQuestionsPerHour']}
+                          label="Max Questions Per Hour"
+                          rules={[{ required: true }]}
+                        >
+                          <InputNumber min={0} className="!w-full" />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'rateLimit', 'dailyLimit']}
+                          label="Daily Limit"
+                          rules={[{ required: true }]}
+                        >
+                          <InputNumber min={0} className="!w-full" />
+                        </Form.Item>
+                      </SectionCard>
+
+                      <SectionCard title="Prompts">
+                        <Form.Item
+                          name={['aiSupport', 'prompts', 'systemPrompt']}
+                          label="System Prompt"
+                          className="md:col-span-2"
+                        >
+                          <Input.TextArea rows={4} />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'prompts', 'safetyPrompt']}
+                          label="Safety Prompt"
+                          className="md:col-span-2"
+                        >
+                          <Input.TextArea rows={3} />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'prompts', 'fallbackPrompt']}
+                          label="Fallback Prompt"
+                          className="md:col-span-2"
+                        >
+                          <Input.TextArea rows={2} />
+                        </Form.Item>
+                        <Form.Item
+                          name={['aiSupport', 'prompts', 'noMatchPrompt']}
+                          label="No Match Prompt"
+                          className="md:col-span-2"
+                        >
+                          <Input.TextArea rows={2} />
+                        </Form.Item>
+                      </SectionCard>
+                    </div>
+                  ),
+                },
+                {
+                  key: 'general',
+                  label: 'General',
+                  children: (
+                    <SectionCard
+                      title="Driver Verification"
+                      description="How often drivers must complete selfie verification."
+                    >
+                      <Form.Item
+                        name="driverSelfieVerificationIntervalMinutes"
+                        label="Selfie Verification Interval (minutes)"
+                        rules={[{ required: true }]}
+                      >
+                        <InputNumber min={0} className="!w-full" />
                       </Form.Item>
                     </SectionCard>
                   ),

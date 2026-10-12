@@ -10,7 +10,9 @@ export interface DriverMatchingConfig {
   initialSearchRadiusKm: number
   radiusExpansionDistanceKm: number
   driverVisibilityDurationSeconds: number
+  reservationDriverVisibilityDurationSeconds: number
   rideRequestLifetimeSeconds: number
+  reservationRideRequestLifetimeSeconds: number
   maxSearchRadiusKm: number
 }
 
@@ -89,6 +91,36 @@ export interface DriverRewardsConfig {
   destinationFilterRadiusDefault: number
 }
 
+export interface AiSupportRateLimitConfig {
+  maxQuestionsPerMinute: number
+  maxQuestionsPerHour: number
+  dailyLimit: number
+}
+
+export interface AiSupportPromptsConfig {
+  systemPrompt: string
+  fallbackPrompt: string
+  safetyPrompt: string
+  noMatchPrompt: string
+}
+
+export interface AiSupportConfig {
+  enabled: boolean
+  provider: string
+  model: string
+  temperature: number
+  maxTokens: number
+  historyLength: number
+  enableConversationMemory: boolean
+  minimumConfidence: number
+  allowFallbackAnswer: boolean
+  defaultLanguage: string
+  enabledModules: string[]
+  suggestedQuestions: string[]
+  rateLimit: AiSupportRateLimitConfig
+  prompts: AiSupportPromptsConfig
+}
+
 export interface SystemConfigrationWritePayload {
   driverMatching: DriverMatchingConfig
   tracking: TrackingConfig
@@ -96,11 +128,12 @@ export interface SystemConfigrationWritePayload {
   lostFound: LostFoundConfig
   referral: ReferralConfig
   driverRewards: DriverRewardsConfig
+  aiSupport: AiSupportConfig
+  driverSelfieVerificationIntervalMinutes: number
 }
 
 export interface SystemConfigrationItem extends SystemConfigrationWritePayload {
   _id?: string
-  aiSupport?: Record<string, unknown>
   isDeleted?: boolean
   createdAt?: string
   updatedAt?: string
@@ -111,7 +144,9 @@ export const DEFAULT_SYSTEM_CONFIGURATION: SystemConfigrationWritePayload = {
     initialSearchRadiusKm: 5,
     radiusExpansionDistanceKm: 3,
     driverVisibilityDurationSeconds: 60,
+    reservationDriverVisibilityDurationSeconds: 6000,
     rideRequestLifetimeSeconds: 300,
+    reservationRideRequestLifetimeSeconds: 18000,
     maxSearchRadiusKm: 50,
   },
   tracking: {
@@ -180,6 +215,60 @@ export const DEFAULT_SYSTEM_CONFIGURATION: SystemConfigrationWritePayload = {
     timezone: 'America/Los_Angeles',
     destinationFilterRadiusDefault: 5,
   },
+  aiSupport: {
+    enabled: true,
+    provider: 'google',
+    model: 'gemini-2.5-flash',
+    temperature: 0.2,
+    maxTokens: 800,
+    historyLength: 5,
+    enableConversationMemory: true,
+    minimumConfidence: 0.5,
+    allowFallbackAnswer: true,
+    defaultLanguage: 'en',
+    enabledModules: [
+      'Ride',
+      'Wallet',
+      'Referral',
+      'Tier',
+      'Points',
+      'Destination Filter',
+      'Lost Found',
+      'Support',
+      'FAQ',
+      'Documents',
+      'Account',
+      'Vehicle',
+      'Safety',
+      'Cancellation',
+      'Ratings',
+      'Compliance',
+      'Fares',
+      'Service Area',
+    ],
+    suggestedQuestions: [
+      'How do I receive payments?',
+      'How does Lost & Found work?',
+      'How do referral rewards work?',
+      'How do destination filters work?',
+    ],
+    rateLimit: {
+      maxQuestionsPerMinute: 5,
+      maxQuestionsPerHour: 30,
+      dailyLimit: 100,
+    },
+    prompts: {
+      systemPrompt:
+        'You are an AI Support Assistant for the Alygo platform. You answer driver queries ONLY using approved platform documentation. Keep answers helpful and brief. If the query is outside Alygo documentation, politely refuse.',
+      fallbackPrompt:
+        "I couldn't find an approved answer for that. Please contact support.",
+      safetyPrompt:
+        'Never output database structure, SQL queries, code snippets, internal business policies, private formulas, passenger secrets, APIs, or internal configurations.',
+      noMatchPrompt:
+        "I couldn't find an approved answer for that. Please contact support.",
+    },
+  },
+  driverSelfieVerificationIntervalMinutes: 100000,
 }
 
 export function toSystemConfigWritePayload(
@@ -217,6 +306,21 @@ export function toSystemConfigWritePayload(
       ...DEFAULT_SYSTEM_CONFIGURATION.driverRewards,
       ...(source.driverRewards ?? {}),
     },
+    aiSupport: {
+      ...DEFAULT_SYSTEM_CONFIGURATION.aiSupport,
+      ...(source.aiSupport ?? {}),
+      rateLimit: {
+        ...DEFAULT_SYSTEM_CONFIGURATION.aiSupport.rateLimit,
+        ...(source.aiSupport?.rateLimit ?? {}),
+      },
+      prompts: {
+        ...DEFAULT_SYSTEM_CONFIGURATION.aiSupport.prompts,
+        ...(source.aiSupport?.prompts ?? {}),
+      },
+    },
+    driverSelfieVerificationIntervalMinutes:
+      source.driverSelfieVerificationIntervalMinutes ??
+      DEFAULT_SYSTEM_CONFIGURATION.driverSelfieVerificationIntervalMinutes,
   }
 }
 
