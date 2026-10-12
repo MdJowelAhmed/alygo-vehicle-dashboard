@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Table, Tabs, type TableProps } from 'antd'
 import { Link, useSearchParams } from 'react-router-dom'
 import { AdminActionHost, createTableRowProps } from '@/components/admin'
@@ -9,10 +9,7 @@ import { SearchingInput } from '@/components/shared/SearchingInput'
 import { ActivePassengersTab } from '@/features/passengers/components/ActivePassengersTab'
 import { PassengerDetailsDrawer } from '@/features/passengers/components/PassengerDetailsDrawer'
 import { PassengerTableActions } from '@/features/passengers/components/PassengerTableActions'
-import {
-  PassengerComplaintsTab,
-  PassengerRefundsTab,
-} from '@/features/passengers/components/PassengerCaseTabs'
+import { PassengerComplaintsTab } from '@/features/passengers/components/PassengerCaseTabs'
 import { mapPassengerListItem } from '@/features/passengers/mapPassengerManagement'
 import {
   DEFAULT_PASSENGER_TAB,
@@ -35,11 +32,20 @@ export default function PassengersPage() {
   useDocumentTitle('Passenger Management')
   const adminActions = useAdminActions()
   const [searchParams, setSearchParams] = useSearchParams()
+  const tabParam = searchParams.get('tab')
   const activeTab =
-    (searchParams.get('tab') as PassengerTabKey | null) ?? DEFAULT_PASSENGER_TAB
+    tabParam === 'refunds'
+      ? 'complaints'
+      : ((tabParam as PassengerTabKey | null) ?? DEFAULT_PASSENGER_TAB)
   const validTab = PASSENGER_TAB_KEYS.includes(activeTab)
     ? activeTab
     : DEFAULT_PASSENGER_TAB
+
+  useEffect(() => {
+    if (tabParam === 'refunds') {
+      setSearchParams({ tab: 'complaints' }, { replace: true })
+    }
+  }, [tabParam, setSearchParams])
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
@@ -230,11 +236,6 @@ export default function PassengersPage() {
               key: 'complaints',
               label: PASSENGER_TAB_LABELS.complaints,
               children: <PassengerComplaintsTab />,
-            },
-            {
-              key: 'refunds',
-              label: PASSENGER_TAB_LABELS.refunds,
-              children: <PassengerRefundsTab />,
             },
             {
               key: 'suspended',
