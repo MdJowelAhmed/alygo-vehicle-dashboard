@@ -60,7 +60,7 @@ function mapSummaryToKpis(summary: DashboardSummary): KpiMetric[] {
   return [
     {
       key: 'totalDrivers',
-      label: 'Total Drivers',
+      label: 'Total Approved Drivers',
       value: summary?.totalDrivers ?? 0,
       change: 0,
       format: 'number',

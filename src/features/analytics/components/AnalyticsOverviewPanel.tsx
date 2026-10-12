@@ -41,7 +41,7 @@ export function AnalyticsOverviewPanel() {
   const primaryKpis = [
     {
       key: 'totalDrivers',
-      label: 'Total Drivers',
+      label: 'Total Approved Drivers',
       value: data.totalDrivers,
       change: 0,
       format: 'number' as const,
