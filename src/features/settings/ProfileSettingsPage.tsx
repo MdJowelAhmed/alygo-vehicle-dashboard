@@ -128,16 +128,16 @@ function ProfileTab() {
         </Upload>
         <div>
           <h3 className="text-lg font-semibold text-white">{profile.name}</h3>
-          <div className="mt-1 flex flex-wrap gap-2">
+          {/* <div className="mt-1 flex flex-wrap gap-2">
             <Tag>{profile.role}</Tag>
             <Tag color={profile.status === 'active' ? 'success' : 'default'}>
               {profile.status}
             </Tag>
             {profile.verified ? <Tag color="blue">Verified</Tag> : null}
-          </div>
-          <p className="mt-1 text-sm text-alygo-text-muted">
+          </div> */}
+          {/* <p className="mt-1 text-sm text-alygo-text-muted">
             Joined {profile.createdAt ? formatDateTime(profile.createdAt) : '—'}
-          </p>
+          </p> */}
           <p className="mt-1 text-xs text-alygo-text-muted">
             Click the avatar to update profile image
           </p>
