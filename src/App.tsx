@@ -1,9 +1,10 @@
 import { Provider } from 'react-redux'
 import { RouterProvider } from 'react-router-dom'
-import { ConfigProvider, theme } from 'antd'
+import { App as AntdApp, ConfigProvider, theme } from 'antd'
 import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 import { router } from '@/routes'
 import { store } from '@/redux/store'
+import { AntdMessageInitializer } from '@/components/common/AntdMessageInitializer'
 
 const antTheme = {
   algorithm: theme.darkAlgorithm,
@@ -36,10 +37,15 @@ export default function App() {
   return (
     <Provider store={store}>
       <ConfigProvider theme={antTheme}>
-        <ErrorBoundary>
-          <RouterProvider router={router} />
-        </ErrorBoundary>
+        {/* AntdApp wrapper enables the static message/notification API outside of React components */}
+        <AntdApp>
+          <AntdMessageInitializer />
+          <ErrorBoundary>
+            <RouterProvider router={router} />
+          </ErrorBoundary>
+        </AntdApp>
       </ConfigProvider>
     </Provider>
   )
 }
+
